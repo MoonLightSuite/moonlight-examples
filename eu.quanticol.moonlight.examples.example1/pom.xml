@@ -10,6 +10,22 @@
   <artifactId>eu.quanticol.moonlight.examples.example1</artifactId>
   <name>MoonLight: A First MoonLight Example.</name>
   <url>http://maven.apache.org</url>
-  
-</project> 
+    <dependencies>
+      <dependency>
+        <groupId>aaa</groupId>
+        <artifactId>amt</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/src/main/resources/amt.jar</systemPath>
+      </dependency>
+      <dependency>
+        <groupId>aaa</groupId>
+        <artifactId>gamt</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/src/main/resources/gamt.jar</systemPath>
+      </dependency>
+    </dependencies>
+</project>
+
 
