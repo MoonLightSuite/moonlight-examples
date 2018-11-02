@@ -22,7 +22,6 @@ package eu.quanticol.moonlight.examples.exmaple1;
 import batch.CommandArguments;
 import com.beust.jcommander.JCommander;
 import diagnostics.DiagnosticsType;
-import eu.quanticol.moonlight.signal.Signal;
 import factory.StlFactory;
 import jamtSignal.interpolation.InterpolationType;
 import jamtType.number.JamtFloatType;
@@ -47,111 +46,62 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] argv) {
-        Signal<Double> signal = new Signal<>();
-        //runThis();
-        //innerMain();
-        runThis2();
-
-    }
-
-
-    static void runThis() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        File stlProperty = new File(classLoader.getResource("clock-jitter/clock-jitter.stl").getFile());
-        File alias = new File(classLoader.getResource("clock-jitter/clock-jitter.alias").getFile());
-        File clock = new File(classLoader.getResource("clock-jitter/clock.vcd").getFile());
-
-        StlFactory.init(JamtFloatType.REAL, InterpolationType.STEP);
-        //JamtTestConfig.init();
-        XStlCompiler comp = new XStlCompiler();
-        String stlPropFile = stlProperty.getAbsolutePath();
-        //String stlPropFile = "./test/stlGrammar/inputFiles/test_input_002.stl";
-        //String aliasFile = "./test/stlGrammar/inputFiles/test_input_002.alias";
-        String aliasFile = alias.getAbsolutePath();
-        //String vcdFile = JamtTestConfig.getVcdDir();
-        String vcdFile = clock.getParent();
-        //vcdFile = vcdFile + FileSystems.getDefault().getSeparator() + "test_asrt1.vcd";
-        vcdFile = clock.getAbsolutePath();
-        comp.setShowCompilerOutput(true);
-
-        try {
-            comp.compile(stlPropFile, vcdFile, InputTraceType.VCD, aliasFile);
-            if (!comp.isErrorFound()) {
-                comp.evaluate();
-                Iterator var6 = comp.getAssertions().iterator();
-
-                while (var6.hasNext()) {
-                    XStlAssertion a = (XStlAssertion) var6.next();
-                    YJLog.logg.info("Assertion {} verdict: {}", a.getName(), a.getVerdict());
-                }
-            } else {
-                YJLog.logg.error("ERRORS FOUND: ");
-                YJLog.logg.error(comp.getErrors().toString());
-                Assert.fail();
-            }
-        } catch (Exception var7) {
-            var7.printStackTrace();
-            Assert.fail();
-        }
-
-    }
-
-    static void runThis2() {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        System.out.println("STABILIZATION");
         File stlProperty = new File(classLoader.getResource("bounded-stabilization/stabilization.stl").getFile());
         File alias = new File(classLoader.getResource("bounded-stabilization/stabilization.alias").getFile());
         File clock = new File(classLoader.getResource("bounded-stabilization/stabilization-extended.vcd").getFile());
+        amt(stlProperty, alias, clock);
 
+        System.out.println("CLOCK");
+        stlProperty = new File(classLoader.getResource("clock-jitter/clock-jitter.stl").getFile());
+        alias = new File(classLoader.getResource("clock-jitter/clock-jitter.alias").getFile());
+        clock = new File(classLoader.getResource("clock-jitter/clock.vcd").getFile());
+        amt(stlProperty, alias, clock);
+
+    }
+
+    private static void amt(File stlProperty, File alias, File clock) {
         StlFactory.init(JamtFloatType.REAL, InterpolationType.STEP);
-        //JamtTestConfig.init();
         XStlCompiler comp = new XStlCompiler();
         String stlPropFile = stlProperty.getAbsolutePath();
-        //String stlPropFile = "./test/stlGrammar/inputFiles/test_input_002.stl";
-        //String aliasFile = "./test/stlGrammar/inputFiles/test_input_002.alias";
         String aliasFile = alias.getAbsolutePath();
-        //String vcdFile = JamtTestConfig.getVcdDir();
-        String vcdFile = clock.getParent();
-        //vcdFile = vcdFile + FileSystems.getDefault().getSeparator() + "test_asrt1.vcd";
-        vcdFile = clock.getAbsolutePath();
+        String vcdFile = clock.getAbsolutePath();
         comp.setShowCompilerOutput(true);
-
         try {
             comp.compile(stlPropFile, vcdFile, InputTraceType.VCD, aliasFile);
             if (!comp.isErrorFound()) {
                 comp.evaluate();
-                Iterator var6 = comp.getAssertions().iterator();
-
-                while (var6.hasNext()) {
-                    XStlAssertion a = (XStlAssertion) var6.next();
-                    YJLog.logg.info("Assertion {} verdict: {}", a.getName(), a.getVerdict());
+                for (XStlAssertion a : comp.getAssertions()) {
+                    //YJLog.logg.info("Assertion {} verdict: {}", a.getName(), a.getVerdict());
+                    System.out.println("Assertion: " + a.getName() + " Verdict: " + a.getVerdict());
                 }
             } else {
                 YJLog.logg.error("ERRORS FOUND: ");
                 YJLog.logg.error(comp.getErrors().toString());
+                System.out.println(comp.getErrors().toString());
                 Assert.fail();
             }
         } catch (Exception var7) {
             var7.printStackTrace();
             Assert.fail();
         }
-        System.out.println("");
-
     }
 
     public static void innerMain() {
-       // java -jar ../../amt.jar -x clock-jitter.stl -a clock-jitter.alias -s clock.vcd -m clock-measurements.csv
+        // java -jar ../../amt.jar -x clock-jitter.stl -a clock-jitter.alias -s clock.vcd -m clock-measurements.csv
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         File stlProperty = new File(classLoader.getResource("clock-jitter/clock-jitter.stl").getFile());
         File alias = new File(classLoader.getResource("clock-jitter/clock-jitter.alias").getFile());
         File clock = new File(classLoader.getResource("clock-jitter/clock.vcd").getFile());
 
-        String[]args = new String[6];
-        args[0]="-x";
-        args[1]=stlProperty.getAbsolutePath();
-        args[2]="-a ";
-        args[3]=alias.getAbsolutePath();
-        args[4]="-s";
-        args[5]=clock.getAbsolutePath();
+        String[] args = new String[6];
+        args[0] = "-x";
+        args[1] = stlProperty.getAbsolutePath();
+        args[2] = "-a ";
+        args[3] = alias.getAbsolutePath();
+        args[4] = "-s";
+        args[5] = clock.getAbsolutePath();
 
         CommandArguments arguments = new CommandArguments();
         JCommander commander = new JCommander(arguments, args);
@@ -215,8 +165,8 @@ public class Main {
                         List<Measurement> measurementList = context.getMeasurements();
                         var14 = measurementList.iterator();
 
-                        while(var14.hasNext()) {
-                            Measurement measurement = (Measurement)var14.next();
+                        while (var14.hasNext()) {
+                            Measurement measurement = (Measurement) var14.next();
                             writer.write(measurement.getName());
                             writer.write(", ");
                             writer.write(Integer.toString(measurement.getSegmentList().size()));
@@ -243,8 +193,8 @@ public class Main {
                         violation = false;
                         var14 = comp.getAssertions().iterator();
 
-                        while(var14.hasNext()) {
-                            a = (XStlAssertion)var14.next();
+                        while (var14.hasNext()) {
+                            a = (XStlAssertion) var14.next();
 //                            switch($SWITCH_TABLE$evaluation$Verdict()[a.getVerdict().ordinal()]) {
 //                                case 1:
 //                                    violation = true;
@@ -265,8 +215,8 @@ public class Main {
                         violation = false;
                         var14 = comp.getAssertions().iterator();
 
-                        while(var14.hasNext()) {
-                            a = (XStlAssertion)var14.next();
+                        while (var14.hasNext()) {
+                            a = (XStlAssertion) var14.next();
 //                            switch($SWITCH_TABLE$evaluation$Verdict()[a.getVerdict().ordinal()]) {
 //                                case 1:
 //                                    violation = true;
@@ -296,5 +246,4 @@ public class Main {
             }
         }
     }
-
 }
