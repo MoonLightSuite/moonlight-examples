@@ -47,6 +47,7 @@ public class Main {
 
     public static void main(String[] argv) {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
         System.out.println("STABILIZATION");
         File stlProperty = new File(classLoader.getResource("bounded-stabilization/stabilization.stl").getFile());
         File alias = new File(classLoader.getResource("bounded-stabilization/stabilization.alias").getFile());
@@ -58,7 +59,6 @@ public class Main {
         alias = new File(classLoader.getResource("clock-jitter/clock-jitter.alias").getFile());
         clock = new File(classLoader.getResource("clock-jitter/clock.vcd").getFile());
         amt(stlProperty, alias, clock);
-
     }
 
     private static void amt(File stlProperty, File alias, File clock) {
