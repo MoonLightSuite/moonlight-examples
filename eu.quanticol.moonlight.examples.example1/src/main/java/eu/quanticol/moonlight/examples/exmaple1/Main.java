@@ -34,6 +34,8 @@ import xStlCompiler.DiagnosticsReportGenerator;
 import xStlCompiler.XStlCompiler;
 import xStlCompiler.XStlContext;
 import xStlCompiler.dto.XStlAssertion;
+import xStlCompiler.dto.timedRegularExpression.XStlMeasure;
+import xStlCompiler.dto.timedRegularExpression.XStlMeasurement;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -63,7 +65,9 @@ public class Main {
 
     private static void amt(File stlProperty, File alias, File clock) {
         StlFactory.init(JamtFloatType.REAL, InterpolationType.STEP);
-        XStlCompiler comp = new XStlCompiler();
+        //XStlMeasurement comp = new XStlMeasurement();
+
+        XStlCompiler comp = new XStlCompiler(true);
         String stlPropFile = stlProperty.getAbsolutePath();
         String aliasFile = alias.getAbsolutePath();
         String vcdFile = clock.getAbsolutePath();
@@ -72,6 +76,7 @@ public class Main {
             comp.compile(stlPropFile, vcdFile, InputTraceType.VCD, aliasFile);
             if (!comp.isErrorFound()) {
                 comp.evaluate();
+                comp.diagnose();
                 for (XStlAssertion a : comp.getAssertions()) {
                     //YJLog.logg.info("Assertion {} verdict: {}", a.getName(), a.getVerdict());
                     System.out.println("Assertion: " + a.getName() + " Verdict: " + a.getVerdict());
@@ -82,6 +87,12 @@ public class Main {
                 System.out.println(comp.getErrors().toString());
                 Assert.fail();
             }
+            FileWriter writer = new FileWriter("ao");
+            DiagnosticsReportGenerator aa = new DiagnosticsReportGenerator(writer);
+            XStlContext visit = aa.visit(comp.getXstlSpec(), comp.getContext(), true);
+            System.out.println("");
+
+
         } catch (Exception var7) {
             var7.printStackTrace();
             Assert.fail();
