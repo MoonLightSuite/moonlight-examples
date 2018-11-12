@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package eu.quanticol.moonlight.examples.exmaple1;
+package eu.quanticol.moonlight.examples.example1;
 
 import batch.CommandArguments;
 import com.beust.jcommander.JCommander;
@@ -34,8 +34,6 @@ import xStlCompiler.DiagnosticsReportGenerator;
 import xStlCompiler.XStlCompiler;
 import xStlCompiler.XStlContext;
 import xStlCompiler.dto.XStlAssertion;
-import xStlCompiler.dto.timedRegularExpression.XStlMeasure;
-import xStlCompiler.dto.timedRegularExpression.XStlMeasurement;
 
 import java.io.File;
 import java.io.FileWriter;
