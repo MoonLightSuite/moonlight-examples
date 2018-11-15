@@ -1,9 +1,4 @@
-% create a trace with signals x and y
-clear;
-close all;
-%load trace.mat;
-
-time = 0:1:200;  
+time = 0:1:200;
 seqS = time;
 seqT = time';
 

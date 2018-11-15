@@ -1,0 +1,12 @@
+time = 0:1:200;
+X = time';
+T = time';
+psi1 = 'a /\ b';
+pred = struct();
+pred(1).str = 'a';
+pred(1).A   =  -1;
+pred(1).b   =  30;
+pred(2).str = 'b';
+pred(2).A   =  1;
+pred(2).b   =  30;
+taliro=@(seqS,seqT) fw_taliro(psi1,pred,X,T);
