@@ -15,7 +15,7 @@ public class MatlabProva {
         MatlabEngine eng = Matlab.startMatlab();
         InputStream resourceAsStream = classLoader.getResourceAsStream("prova.m");
         BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
-        String line = null;
+        String line;
         while ((line = br.readLine()) != null) {
             if (!line.isEmpty()) {
                 eng.eval(line);
