@@ -9,4 +9,4 @@ pred(1).b   =  30;
 pred(2).str = 'b';
 pred(2).A   =  1;
 pred(2).b   =  30;
-taliro=@(seqS,seqT) fw_taliro(psi1,pred,X,T);
+taliro=@(X,T) fw_taliro(psi1,pred,X,T);

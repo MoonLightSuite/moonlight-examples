@@ -22,7 +22,7 @@ public class MatlabProva {
             }
         }
         br.close();
-        eng.feval("taliroRes = taliro(X,T)");
+        eng.eval("taliroRes = taliro(X,T)");
         double Z = eng.getVariable("taliroRes");
         System.out.println(Z);
 
