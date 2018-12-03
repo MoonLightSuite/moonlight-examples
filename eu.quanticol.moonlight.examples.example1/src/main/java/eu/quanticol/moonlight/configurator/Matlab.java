@@ -1,20 +1,24 @@
 package eu.quanticol.moonlight.configurator;
 
-import com.mathworks.engine.EngineException;
-import com.mathworks.engine.MatlabEngine;
+import org.n52.matlab.control.MatlabProxy;
+import org.n52.matlab.control.MatlabProxyFactory;
+import org.n52.matlab.control.MatlabProxyFactoryOptions;
 
 public class Matlab {
 
-    public static MatlabEngine startMatlab(){
-        MatlabEngine eng = null;
+
+    public static MatlabProxy startMatlab() {
+        MatlabProxyFactoryOptions.Builder options = new MatlabProxyFactoryOptions.Builder();
+        options.setUsePreviouslyControlledSession(true);
         try {
-            eng = MatlabEngine.startMatlab();
-            eng.evalAsync( String.format("addpath(genpath('%s'))",Configurator.STALIRO_PATH));
-            eng.evalAsync( String.format("addpath(genpath('%s'))",Configurator.BREACH_PATH));
-            eng.evalAsync( String.format("addpath(genpath('%s'))",Configurator.BREACH_PATH));
+            MatlabProxy proxy = new MatlabProxyFactory(options.build()).getProxy();
+            proxy.eval(String.format("addpath(genpath('%s'))", Configurator.STALIRO_PATH));
+            proxy.eval(String.format("addpath(genpath('%s'))", Configurator.BREACH_PATH));
+            proxy.eval(String.format("addpath(genpath('%s'))", Configurator.BREACH_PATH));
+            return proxy;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return eng;
+        return null;
     }
 }

@@ -13,6 +13,11 @@
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
+            <groupId>org.n52.matlab</groupId>
+            <artifactId>matlab-control</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>aaa</groupId>
             <artifactId>amt</artifactId>
             <version>1.0</version>
