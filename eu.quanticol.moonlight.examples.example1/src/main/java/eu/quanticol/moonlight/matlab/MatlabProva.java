@@ -1,18 +1,13 @@
 package eu.quanticol.moonlight.matlab;
 
 import eu.quanticol.moonlight.configurator.Matlab;
-import org.n52.matlab.control.MatlabConnectionException;
 import org.n52.matlab.control.MatlabInvocationException;
 import org.n52.matlab.control.MatlabProxy;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class MatlabProva {
 
 
-
-    public static void main(String[] args) throws MatlabConnectionException, MatlabInvocationException {
+    public static void main(String[] args) throws MatlabInvocationException {
 
         MatlabProxy proxy = Matlab.startMatlab();
         proxy.setVariable("a", 5);
