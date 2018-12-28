@@ -62,8 +62,6 @@ public class MatlabProva {
         }
         after = System.currentTimeMillis();
         System.out.println("Breach Avg. Time (msec) ("+ nReps +" repetitions): " +(after-before)/1000.);
-
-
     }
 
 
