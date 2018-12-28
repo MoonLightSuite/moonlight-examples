@@ -1,6 +1,7 @@
 package eu.quanticol.moonlight.configurator;
 
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.Properties;
 
 public class Configurator {
@@ -11,7 +12,8 @@ public class Configurator {
     private static Properties load() {
         Properties prop = new Properties();
         try {
-            InputStream in = Configurator.class.getResourceAsStream("config.properties");
+            String configFile = InetAddress.getLocalHost().getHostName() + ".properties";
+            InputStream in = Configurator.class.getResourceAsStream(configFile);
             prop.load(in);
             in.close();
         } catch (Exception e) {

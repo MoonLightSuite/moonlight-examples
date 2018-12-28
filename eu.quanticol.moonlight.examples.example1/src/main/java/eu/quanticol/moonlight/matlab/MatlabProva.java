@@ -1,15 +1,12 @@
 package eu.quanticol.moonlight.matlab;
 
-import com.mathworks.engine.MatlabEngine;
 import eu.quanticol.moonlight.configurator.Matlab;
 import org.n52.matlab.control.MatlabConnectionException;
 import org.n52.matlab.control.MatlabInvocationException;
 import org.n52.matlab.control.MatlabProxy;
-import org.n52.matlab.control.MatlabProxyFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class MatlabProva {
 
@@ -20,6 +17,7 @@ public class MatlabProva {
         MatlabProxy proxy = Matlab.startMatlab();
         proxy.setVariable("a", 5);
         proxy.eval("a+1");
+        System.out.println("done");
     }
 
 //    public static void main2(String[] args) throws Exception {
