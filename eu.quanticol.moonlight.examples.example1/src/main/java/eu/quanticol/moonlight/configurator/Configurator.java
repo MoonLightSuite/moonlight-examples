@@ -8,8 +8,9 @@ class Configurator {
     private static final Properties PROPERTIES = load();
     static final String STALIRO_PATH = PROPERTIES.getProperty("STALIRO_PATH");
     static final String BREACH_PATH = PROPERTIES.getProperty("BREACH_PATH");
+    static final String UTILITY_PATH = PROPERTIES.getProperty("UTILITY_PATH");
 
-    private static Properties load() {
+    static Properties load() {
         Properties prop = new Properties();
         try {
             String configFile = InetAddress.getLocalHost().getHostName() + ".properties";

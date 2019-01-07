@@ -35,7 +35,7 @@ public class MatlabProva {
         double[] Z = (double[] )eng.getVariable("taliroRes");
         System.out.println("Taliro Robustness: " +Z[0]);
         long before = System.currentTimeMillis();
-        int nReps = 1000;
+        int nReps = 30;
         for (int i = 0; i < nReps; i++) {
             eng.eval("taliroRes = taliro(X,T);");
         }
@@ -43,7 +43,7 @@ public class MatlabProva {
         System.out.println("Taliro Avg. Time (msec) ("+ nReps +" repetitions): " +(after-before)/1000.);
 
 
-        resourceAsStream = classLoader.getResourceAsStream("prova.m");
+        resourceAsStream = classLoader.getResourceAsStream("prova4.m");
         br = new BufferedReader(new InputStreamReader(resourceAsStream));
         while ((line = br.readLine()) != null) {
             if (!line.isEmpty()) {
@@ -52,13 +52,13 @@ public class MatlabProva {
         }
         br.close();
 
-        eng.eval("breachRes = breach(X,T);");
+        eng.eval("breachRes = robBreach(X,T);");
         Z =   (double[]) eng.getVariable("breachRes");
         System.out.println("Breach Robustness: " +Z[0]);
         before = System.currentTimeMillis();
-        nReps = 1000;
+        nReps = 30;
         for (int i = 0; i < nReps; i++) {
-            eng.eval("breachRes = breach(X,T);");
+            eng.eval("breachRes = robBreach(X,T);");
         }
         after = System.currentTimeMillis();
         System.out.println("Breach Avg. Time (msec) ("+ nReps +" repetitions): " +(after-before)/1000.);

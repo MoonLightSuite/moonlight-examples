@@ -14,7 +14,7 @@ public class Matlab {
             MatlabProxy proxy = new MatlabProxyFactory(options.build()).getProxy();
             proxy.eval(String.format("addpath(genpath('%s'))", Configurator.STALIRO_PATH));
             proxy.eval(String.format("addpath(genpath('%s'))", Configurator.BREACH_PATH));
-            proxy.eval(String.format("addpath(genpath('%s'))", Configurator.BREACH_PATH));
+            proxy.eval(String.format("addpath(genpath('%s'))", Configurator.UTILITY_PATH));
             return proxy;
         } catch (Exception e) {
             e.printStackTrace();

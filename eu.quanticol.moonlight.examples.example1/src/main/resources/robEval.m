@@ -1,4 +1,4 @@
-function [robBreach, tau, compTime] = git l(stringTrace, trace,stringFormulaName, stringFormula)
+function [robBreach, tau, compTime] =robEval(stringTrace, trace,stringFormulaName, stringFormula)
 InitBreach
 BrTrace = BreachTraceSystem(stringTrace, trace);
 BreachProp=STL_Formula(stringFormulaName, stringFormula);
