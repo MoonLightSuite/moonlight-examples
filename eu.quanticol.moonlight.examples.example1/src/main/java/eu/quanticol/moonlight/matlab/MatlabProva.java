@@ -29,63 +29,11 @@ public class MatlabProva {
     private static final MatlabProxy eng = Matlab.startMatlab();
 
 
-    public static void main2(String[] args) throws MatlabInvocationException {
-
-        MatlabProxy proxy = Matlab.startMatlab();
-        proxy.setVariable("a", 5);
-        proxy.eval("a+1");
-        System.out.println("done");
-    }
-
-    public static void main3(String[] args) throws Exception {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        MatlabProxy eng = Matlab.startMatlab();
-        InputStream resourceAsStream = classLoader.getResourceAsStream("prova.m");
-        BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (!line.isEmpty()) {
-                eng.eval(line);
-            }
-        }
-        br.close();
-        eng.eval("taliroRes = taliro(X,T);");
-        double[] Z = (double[] )eng.getVariable("taliroRes");
-        System.out.println("Taliro Robustness: " +Z[0]);
-        long before = System.currentTimeMillis();
-        int nReps = 30;
-        for (int i = 0; i < nReps; i++) {
-            eng.eval("taliroRes = taliro(X,T);");
-        }
-        long after = System.currentTimeMillis();
-        System.out.println("Taliro Avg. Time (msec) ("+ nReps +" repetitions): " +(after-before)/1000.);
-
-
-        resourceAsStream = classLoader.getResourceAsStream("prova4.m");
-        br = new BufferedReader(new InputStreamReader(resourceAsStream));
-        while ((line = br.readLine()) != null) {
-            if (!line.isEmpty()) {
-                eng.eval(line);
-            }
-        }
-        br.close();
-
-        eng.eval("breachRes = robBreach(X,T);");
-        Z =   (double[]) eng.getVariable("breachRes");
-        System.out.println("Breach Robustness: " +Z[0]);
-        before = System.currentTimeMillis();
-        nReps = 30;
-        for (int i = 0; i < nReps; i++) {
-            eng.eval("breachRes = robBreach(X,T);");
-        }
-        after = System.currentTimeMillis();
-        System.out.println("Breach Avg. Time (msec) ("+ nReps +" repetitions): " +(after-before)/1000.);
-    }
-
-    public static void main(String[] args) throws Exception {
+   public static void main(String[] args) throws Exception {
         //main3(args);
-        test(14,3);
+        //test(14,3);
         //test(15,3);
+        test(15,3);
     }
     public static void mainLoop(String[] args) throws Exception {
         for (int i = 1; i < 10; i++) {
@@ -131,22 +79,7 @@ public class MatlabProva {
             System.out.println("Taliro Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
 
 
-            HashMap<String, Function<Parameters, Function<Assignment, Double>>> mappa = new HashMap<>();
-            //a is the atomic proposition: a>=0
-            mappa.put("a", y -> assignment -> assignment.get(0, Double.class));
-            mappa.put("b", y -> assignment -> assignment.get(1, Double.class));
-            mappa.put("c", y -> assignment -> assignment.get(2, Double.class));
-            TemporalMonitoring<Assignment, Double> monitoring = new TemporalMonitoring<>(mappa, new DoubleDomain());
-            Function<Signal<Assignment>, Signal<Double>> m = monitoring.monitor(generatedFormula, null);
-            before = System.currentTimeMillis();
-            for (int i = 0; i < nReps; i++) {
-                Signal<Double> outputSignal = m.apply(signal);
-                outputSignal.getIterator(true).value();
-            }
-            after = System.currentTimeMillis();
-            Double value = m.apply(signal).getIterator(true).value();
-            System.out.println("MoonLight Robustness: " + value);
-            System.out.println("MoonLight Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
+
 
             //            //BREACH
             eng.eval("trace = @(X,T)[T M]");
@@ -165,6 +98,22 @@ public class MatlabProva {
             System.out.println("Breach Robustness: " + Z[0]);
             System.out.println("Breach Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
 
+            HashMap<String, Function<Parameters, Function<Assignment, Double>>> mappa = new HashMap<>();
+            //a is the atomic proposition: a>=0
+            mappa.put("a", y -> assignment -> assignment.get(0, Double.class));
+            mappa.put("b", y -> assignment -> assignment.get(1, Double.class));
+            mappa.put("c", y -> assignment -> assignment.get(2, Double.class));
+            TemporalMonitoring<Assignment, Double> monitoring = new TemporalMonitoring<>(mappa, new DoubleDomain());
+            Function<Signal<Assignment>, Signal<Double>> m = monitoring.monitor(generatedFormula, null);
+            before = System.currentTimeMillis();
+            for (int i = 0; i < nReps; i++) {
+                Signal<Double> outputSignal = m.apply(signal);
+                outputSignal.getIterator(true).value();
+            }
+            after = System.currentTimeMillis();
+            Double value = m.apply(signal).getIterator(true).value();
+            System.out.println("MoonLight Robustness: " + value);
+            System.out.println("MoonLight Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
 
 
             return Math.abs(Z[0] - value);
