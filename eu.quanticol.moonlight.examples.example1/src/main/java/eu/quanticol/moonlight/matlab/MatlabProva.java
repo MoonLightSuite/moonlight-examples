@@ -130,23 +130,6 @@ public class MatlabProva {
             long after = System.currentTimeMillis();
             System.out.println("Taliro Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
 
-//            //BREACH
-            eng.eval("trace = @(X,T)[T M]");
-            eng.eval("stringTrace = {'a','b','c'}");
-            eng.eval("stringFormulaName = 'phi'");
-            String breachFormula = toBreach.toBreach(generatedFormula);
-            System.out.println(breachFormula);
-            eng.eval("stringFormula ='"+ breachFormula +"'");
-            eng.eval("robBreach = @(X,T) robEval(stringTrace, trace(X,T),stringFormulaName,stringFormula);");
-            before = System.currentTimeMillis();
-            for (int i = 0; i < nReps; i++) {
-                eng.eval("robRes = robBreach(M,T);");
-            }
-            after = System.currentTimeMillis();
-            Z = (double[]) eng.getVariable("robRes");
-            System.out.println("Breach Robustness: " + Z[0]);
-            System.out.println("Breach Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
-
 
             HashMap<String, Function<Parameters, Function<Assignment, Double>>> mappa = new HashMap<>();
             //a is the atomic proposition: a>=0
@@ -164,6 +147,25 @@ public class MatlabProva {
             Double value = m.apply(signal).getIterator(true).value();
             System.out.println("MoonLight Robustness: " + value);
             System.out.println("MoonLight Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
+
+            //            //BREACH
+            eng.eval("trace = @(X,T)[T M]");
+            eng.eval("stringTrace = {'a','b','c'}");
+            eng.eval("stringFormulaName = 'phi'");
+            String breachFormula = toBreach.toBreach(generatedFormula);
+            System.out.println(breachFormula);
+            eng.eval("stringFormula ='"+ breachFormula +"'");
+            eng.eval("robBreach = @(X,T) robEval(stringTrace, trace(X,T),stringFormulaName,stringFormula);");
+            before = System.currentTimeMillis();
+            for (int i = 0; i < nReps; i++) {
+                eng.eval("robRes = robBreach(M,T);");
+            }
+            after = System.currentTimeMillis();
+            Z = (double[]) eng.getVariable("robRes");
+            System.out.println("Breach Robustness: " + Z[0]);
+            System.out.println("Breach Avg. Time (msec) (" + nReps + " repetitions): " + (after - before) / 1000.);
+
+
 
             return Math.abs(Z[0] - value);
         } catch (Exception ex){

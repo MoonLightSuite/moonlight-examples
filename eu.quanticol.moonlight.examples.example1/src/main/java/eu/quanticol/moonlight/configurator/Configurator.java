@@ -13,7 +13,7 @@ class Configurator {
     static Properties load() {
         Properties prop = new Properties();
         try {
-            String configFile = InetAddress.getLocalHost().getHostName() + ".properties";
+            String configFile = System.getProperty("user.name") + ".properties";
             InputStream in = Configurator.class.getResourceAsStream(configFile);
             prop.load(in);
             in.close();
