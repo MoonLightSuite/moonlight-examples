@@ -33,7 +33,7 @@ public class MatlabProva {
         //main3(args);
         //test(14,3);
         //test(15,3);
-        test(15,3);
+        test(14,3);
     }
     public static void mainLoop(String[] args) throws Exception {
         for (int i = 1; i < 10; i++) {
@@ -49,10 +49,11 @@ public class MatlabProva {
             functionalMap.put("a", t -> Math.pow(t, 2.));
             functionalMap.put("b", Math::cos);
             functionalMap.put("c", Math::sin);
+            double timeStep = 0.0001;
             SignalCreatorDouble signalCreator = new SignalCreatorDouble(functionalMap);
-            double[] time = signalCreator.generateTime(0, 100, 0.1);
+            double[] time = signalCreator.generateTime(0, 100, timeStep);
             double[][] values = signalCreator.generateValues(time);
-            VariableArraySignal signal = signalCreator.generate(0, 100, 0.1);
+            VariableArraySignal signal = signalCreator.generate(0, 100, timeStep);
             FormulaGenerator formulaGenerator = new FutureFormulaGenerator(new Random(seed), signal.getEnd(), signalCreator.getVariableNames());
             Formula generatedFormula = formulaGenerator.getFormula(formulaLength);
             //System.out.println(generatedFormula.toString());
