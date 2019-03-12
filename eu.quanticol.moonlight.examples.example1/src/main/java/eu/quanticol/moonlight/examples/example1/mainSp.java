@@ -41,9 +41,7 @@ public class mainSp {
         city.add(3, 15.0, 6);
 
 
-        ArrayList<String> places = new ArrayList<>(Arrays.asList("BusStop", "Hospital", "MetroStop", "MainSquare", "BusStop", "Museum", "MetroStop"));
-
-
+        ArrayList<String> place = new ArrayList<>(Arrays.asList("BusStop", "Hospital", "MetroStop", "MainSquare", "BusStop", "Museum", "MetroStop"));
         ArrayList<Boolean> taxi=new ArrayList<>(Arrays.asList(false,false,true,false,false,true,false));
         ArrayList<Integer> people=new ArrayList<>(Arrays.asList(3,145,67,243,22,103,6));
 
@@ -57,7 +55,7 @@ public class mainSp {
 
         //// notHospital property
         ArrayList<Boolean> notHospital = new ArrayList<Boolean>();
-        places.forEach(i -> notHospital.add(!i.equals("Hospital")));
+        place.forEach(i -> notHospital.add(!i.equals("Hospital")));
 
         //// Somewere Taxi property
         ArrayList<Boolean> somewhereTaxy = minutes.somewhere(new BooleanDomain(), taxi::get );
