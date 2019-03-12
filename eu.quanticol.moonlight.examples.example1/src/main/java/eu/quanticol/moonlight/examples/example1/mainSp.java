@@ -44,9 +44,11 @@ public class mainSp {
         ArrayList<String> places = new ArrayList<>(Arrays.asList("BusStop", "Hospital", "MetroStop", "MainSquare", "BusStop", "Museum", "MetroStop"));
 
 
-        SpatialSignal<Boolean> Taxi = new SpatialSignal<>(size);
         ArrayList<Boolean> taxi=new ArrayList<>(Arrays.asList(false,false,true,false,false,true,false));
-        Taxi.add(0,taxi);
+        ArrayList<Integer> people=new ArrayList<>(Arrays.asList(3,145,67,243,22,103,6));
+
+        SpatialSignal<Boolean> spCity = new SpatialSignal<>(size);
+        spCity.add(0,taxi);
 
 
         double range = 10;
