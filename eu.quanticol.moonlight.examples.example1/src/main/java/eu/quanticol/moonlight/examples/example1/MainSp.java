@@ -1,15 +1,22 @@
 package eu.quanticol.moonlight.examples.example1;
 
+import eu.quanticol.moonlight.formula.AtomicFormula;
 import eu.quanticol.moonlight.formula.BooleanDomain;
 import eu.quanticol.moonlight.formula.DoubleDistance;
+import eu.quanticol.moonlight.formula.Formula;
+import eu.quanticol.moonlight.formula.Parameters;
+import eu.quanticol.moonlight.formula.SignalDomain;
+import eu.quanticol.moonlight.monitoring.SpatioTemporalMonitoring;
 import eu.quanticol.moonlight.signal.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 
-public class mainSp2 {
+public class MainSp {
     public static void main(String[] argv) {
         Integer size = 7;
         GraphModel<Double> city = new GraphModel<Double>(size);
@@ -85,6 +92,8 @@ public class mainSp2 {
         // variableArraySignal.add(0, place.get(j), taxi.get(j), people.get(j));
 
 
+        //Assigment[][] data = new Assigment[timeSteps][locations];
+        
         ArrayList<Assignment> signalSP = new ArrayList<Assignment>();
         for (int i = 0; i < size; i++) {
             signalSP.add(factory.get(place.get(i), taxi.get(i), people.get(i)));
@@ -93,11 +102,18 @@ public class mainSp2 {
         SpatioTemporalSignal<Assignment> citySignal = new SpatioTemporalSignal<>(size);
         citySignal.add(0,signalSP);
 
+        Formula f = new AtomicFormula("thereIsATaxi");
+ 
+        HashMap<String,Function<Parameters,Function<Assignment,Boolean>>> atomicPropositions = new HashMap<>();
+        atomicPropositions.put( "thereIsATaxi" , par -> a -> a.get(1, Boolean.class) );
+        atomicPropositions.put( "manyPeople" , par -> a -> a.get(2, Integer.class) > 200 );
+		HashMap<String,Function<SpatialModel<Double>,DistanceStructure<Double,? extends Object>>> distanceFunctions = new HashMap<>();
+		distanceFunctions.put("minutes", g -> minutes);		
+		SignalDomain<Boolean> module = new BooleanDomain();
+		SpatioTemporalMonitoring<Double, Assignment, Boolean> monitorFactory = new SpatioTemporalMonitoring<Double, Assignment, Boolean>(atomicPropositions, distanceFunctions, module, true);
+		BiFunction<Function<Double, SpatialModel<Double>>, SpatioTemporalSignal<Assignment>, SpatioTemporalSignal<Boolean>> m = monitorFactory.monitor(f,null);
 
-
-
-
-
+		SpatioTemporalSignal<Boolean> out = m.apply(t -> city, citySignal);
     }
 
 
