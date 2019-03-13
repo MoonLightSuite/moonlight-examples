@@ -35,7 +35,7 @@ public class mainSp {
         ArrayList<Integer> people=new ArrayList<>(Arrays.asList(3,145,67,243,22,103,6));
 
 
-        SpatialSignal<Boolean> spCity = new SpatialSignal<>(size);
+        SpatioTemporalSignal<Boolean> spCity = new SpatioTemporalSignal<>(size);
         spCity.add(0, taxi);
 
 
@@ -71,7 +71,7 @@ public class mainSp {
         for (int i = 0; i < size; i++) {
             pluto.add(new Object[]{place.get(i), taxi.get(i), people.get(i)});
         }
-        SpatialSignal<Object[]> sss = new SpatialSignal<>(size);
+        SpatioTemporalSignal<Object[]> sss = new SpatioTemporalSignal<>(size);
         sss.add(0, pluto);
 
         System.out.println();
