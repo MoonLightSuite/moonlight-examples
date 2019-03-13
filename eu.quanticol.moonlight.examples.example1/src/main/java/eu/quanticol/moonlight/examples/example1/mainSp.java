@@ -4,9 +4,8 @@ import eu.quanticol.moonlight.formula.BooleanDomain;
 import eu.quanticol.moonlight.formula.DoubleDistance;
 import eu.quanticol.moonlight.signal.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 
 public class mainSp {
@@ -37,6 +36,10 @@ public class mainSp {
 
         SpatioTemporalSignal<Boolean> spCity = new SpatioTemporalSignal<>(size);
         spCity.add(0, taxi);
+        //// Stop property
+        ArrayList<Boolean> stop = new ArrayList<Boolean>();
+        place.forEach(i -> stop.add(i.equals("BusStop") || i.equals("MetroStop")));
+        System.out.println(stop);
 
 
         double range = 10;
