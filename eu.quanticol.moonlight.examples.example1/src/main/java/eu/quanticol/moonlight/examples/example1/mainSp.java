@@ -34,68 +34,55 @@ public class mainSp {
         ArrayList<Integer> people=new ArrayList<>(Arrays.asList(3,145,67,243,22,103,6));
 
 
+        SpatioTemporalSignal<Boolean> spCity = new SpatioTemporalSignal<>(size);
+        spCity.add(0, taxi);
         //// Stop property
         ArrayList<Boolean> stop = new ArrayList<Boolean>();
         place.forEach(i -> stop.add(i.equals("BusStop") || i.equals("MetroStop")));
         System.out.println(stop);
 
-        //// MainSquare property
-        ArrayList<Boolean> mainsquare = new ArrayList<Boolean>();
-        place.forEach(i -> mainsquare.add(i.equals("MainSquare")));
+
+        double range = 10;
+        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), d -> d < range, city);
+
 
         //// notHospital property
         ArrayList<Boolean> notHospital = new ArrayList<Boolean>();
         place.forEach(i -> notHospital.add(!i.equals("Hospital")));
 
         //// Somewere Taxi property
+<<<<<<< HEAD
         double range = 10;
         DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), d -> d <= range, city);
+=======
+>>>>>>> 437772aa86bdc350f86d0378273e419379367063
         ArrayList<Boolean> somewhereTaxy = minutes.somewhere(new BooleanDomain(), taxi::get);
 
-        //// (R1) Hospital -> Somewere Taxi property
+        //// Hospital -> Somewere Taxi property
         ArrayList<Boolean> r1 = new ArrayList<Boolean>(size);
         for (int i = 0; i < size; i++) {
             r1.add(notHospital.get(i) || somewhereTaxy.get(i));
         }
-        System.out.println(r1);
 
-        /// stop reach_{<=10} mainsquare
-        ArrayList<Boolean> reacmainsquare = minutes.reach(new BooleanDomain(), taxi::get, mainsquare::get);
-
-
-        System.out.println(reacmainsquare);
-
-
-
-
-
-
-
-
-        //// SpatioTemporalMonitoring
+        System.out.print(r1);
 
         AssignmentFactory factory = new AssignmentFactory(String.class, Boolean.class, Integer.class);
-        HashMap<String,Integer> vTable = new HashMap<>();
-        vTable.put("place", 1);
-        vTable.put("taxi", 2);
-        vTable.put("people", 3);
-
-        //VariableArraySignal variableArraySignal = new VariableArraySignal(new String[]{"place", "taxi", "people"}, factory);
-        // variableArraySignal.add(0, place.get(j), taxi.get(j), people.get(j));
-
-
-        ArrayList<Assignment> signalSP = new ArrayList<Assignment>();
-        for (int i = 0; i < size; i++) {
-            signalSP.add(factory.get(place.get(i), taxi.get(i), people.get(i)));
+        factory.get("pippo", true, 5);
+        //variableArraySignal.add(0,);
+        List<VariableArraySignal> pippo = new ArrayList<>();
+        for (int j = 0; j < size; j++) {
+            VariableArraySignal variableArraySignal = new VariableArraySignal(new String[]{"place", "taxi", "people"}, factory);
+            variableArraySignal.add(0, place.get(j), taxi.get(j), people.get(j));
+            pippo.add(variableArraySignal);
         }
+        ArrayList<Object[]> pluto = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            pluto.add(new Object[]{place.get(i), taxi.get(i), people.get(i)});
+        }
+        SpatioTemporalSignal<Object[]> sss = new SpatioTemporalSignal<>(size);
+        sss.add(0, pluto);
 
-        SpatioTemporalSignal<Assignment> citySignal = new SpatioTemporalSignal<>(size);
-        citySignal.add(0,signalSP);
-
-
-
-
-
+        System.out.println();
 
     }
 
