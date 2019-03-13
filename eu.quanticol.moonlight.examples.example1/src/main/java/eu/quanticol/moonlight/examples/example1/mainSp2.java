@@ -4,11 +4,12 @@ import eu.quanticol.moonlight.formula.BooleanDomain;
 import eu.quanticol.moonlight.formula.DoubleDistance;
 import eu.quanticol.moonlight.signal.*;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 
-public class mainSp {
+public class mainSp2 {
     public static void main(String[] argv) {
         Integer size = 7;
         GraphModel<Double> city = new GraphModel<Double>(size);
