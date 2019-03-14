@@ -1,11 +1,6 @@
 package eu.quanticol.moonlight.examples.example1;
 
-import eu.quanticol.moonlight.formula.AtomicFormula;
-import eu.quanticol.moonlight.formula.BooleanDomain;
-import eu.quanticol.moonlight.formula.DoubleDistance;
-import eu.quanticol.moonlight.formula.Formula;
-import eu.quanticol.moonlight.formula.Parameters;
-import eu.quanticol.moonlight.formula.SignalDomain;
+import eu.quanticol.moonlight.formula.*;
 import eu.quanticol.moonlight.monitoring.SpatioTemporalMonitoring;
 import eu.quanticol.moonlight.signal.*;
 
@@ -37,83 +32,53 @@ public class MainSp {
         city.add(6, 15.0, 3);
         city.add(3, 15.0, 6);
 
-        ArrayList<String> place = new ArrayList<>(Arrays.asList("BusStop", "Hospital", "MetroStop", "MainSquare", "BusStop", "Museum", "MetroStop"));
+        ArrayList<String> place = new ArrayList<String>(Arrays.asList("BusStop", "Hospital", "MetroStop", "MainSquare", "BusStop", "Museum", "MetroStop"));
         ArrayList<Boolean> taxi=new ArrayList<>(Arrays.asList(false,false,true,false,false,true,false));
         ArrayList<Integer> people=new ArrayList<>(Arrays.asList(3,145,67,243,22,103,6));
 
-
-        //// Stop property
-        ArrayList<Boolean> stop = new ArrayList<Boolean>();
-        place.forEach(i -> stop.add(i.equals("BusStop") || i.equals("MetroStop")));
-        System.out.println(stop);
-
-        //// MainSquare property
-        ArrayList<Boolean> mainsquare = new ArrayList<Boolean>();
-        place.forEach(i -> mainsquare.add(i.equals("MainSquare")));
-
-        //// notHospital property
-        ArrayList<Boolean> notHospital = new ArrayList<Boolean>();
-        place.forEach(i -> notHospital.add(!i.equals("Hospital")));
-
-        //// Somewere Taxi property
-        double range = 10;
-        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), d -> d <= range, city);
-        ArrayList<Boolean> somewhereTaxy = minutes.somewhere(new BooleanDomain(), taxi::get);
-
-        //// (R1) Hospital -> Somewere Taxi property
-        ArrayList<Boolean> r1 = new ArrayList<Boolean>(size);
-        for (int i = 0; i < size; i++) {
-            r1.add(notHospital.get(i) || somewhereTaxy.get(i));
-        }
-        System.out.println(r1);
-
-        /// stop reach_{<=10} mainsquare
-        ArrayList<Boolean> reacmainsquare = minutes.reach(new BooleanDomain(), taxi::get, mainsquare::get);
-
-
-        System.out.println(reacmainsquare);
-
-
-
-
-
-
-
-
-        //// SpatioTemporalMonitoring
-
+        //// SpatioTemporalSignal
         AssignmentFactory factory = new AssignmentFactory(String.class, Boolean.class, Integer.class);
-        HashMap<String,Integer> vTable = new HashMap<>();
-        vTable.put("place", 1);
-        vTable.put("taxi", 2);
-        vTable.put("people", 3);
-
-        //VariableArraySignal variableArraySignal = new VariableArraySignal(new String[]{"place", "taxi", "people"}, factory);
-        // variableArraySignal.add(0, place.get(j), taxi.get(j), people.get(j));
-
-
-        //Assigment[][] data = new Assigment[timeSteps][locations];
-        
         ArrayList<Assignment> signalSP = new ArrayList<Assignment>();
         for (int i = 0; i < size; i++) {
             signalSP.add(factory.get(place.get(i), taxi.get(i), people.get(i)));
         }
-
         SpatioTemporalSignal<Assignment> citySignal = new SpatioTemporalSignal<>(size);
         citySignal.add(0,signalSP);
-
-        Formula f = new AtomicFormula("thereIsATaxi");
+        citySignal.add(1,signalSP);
+        citySignal.add(3,signalSP);
  
         HashMap<String,Function<Parameters,Function<Assignment,Boolean>>> atomicPropositions = new HashMap<>();
         atomicPropositions.put( "thereIsATaxi" , par -> a -> a.get(1, Boolean.class) );
+        atomicPropositions.put( "thereIsAStop" , par -> a -> a.get(0, String.class).equals("BusStop") || a.get(0, String.class).equals("MetroStop") );
+        atomicPropositions.put("thereIsaMainSquare" , par -> a -> a.get(0, String.class).equals("MainSquare") );
+        atomicPropositions.put("thereIsanHospital" , par -> a -> a.get(0, String.class).equals("Hospital") );
         atomicPropositions.put( "manyPeople" , par -> a -> a.get(2, Integer.class) > 200 );
-		HashMap<String,Function<SpatialModel<Double>,DistanceStructure<Double,? extends Object>>> distanceFunctions = new HashMap<>();
-		distanceFunctions.put("minutes", g -> minutes);		
-		SignalDomain<Boolean> module = new BooleanDomain();
+
+
+        Formula isH = new AtomicFormula("thereIsanHospital");
+        Formula isT = new AtomicFormula("thereIsATaxi");
+        Formula notIsH = new NegationFormula(isH);
+
+        double range = 10;
+        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), d -> d <= range, city);
+        HashMap<String,Function<SpatialModel<Double>,DistanceStructure<Double,? extends Object>>> distanceFunctions = new HashMap<>();
+        distanceFunctions.put("minutes", g -> minutes);
+        Formula someT = new SomewhereFormula("minutes", isT);
+
+        Formula r1 = new OrFormula(notIsH,someT);
+
+
+        SignalDomain<Boolean> module = new BooleanDomain();
 		SpatioTemporalMonitoring<Double, Assignment, Boolean> monitorFactory = new SpatioTemporalMonitoring<Double, Assignment, Boolean>(atomicPropositions, distanceFunctions, module, true);
-		BiFunction<Function<Double, SpatialModel<Double>>, SpatioTemporalSignal<Assignment>, SpatioTemporalSignal<Boolean>> m = monitorFactory.monitor(f,null);
+		BiFunction<Function<Double, SpatialModel<Double>>, SpatioTemporalSignal<Assignment>, SpatioTemporalSignal<Boolean>> m =
+                monitorFactory.monitor(someT,null);
 
 		SpatioTemporalSignal<Boolean> out = m.apply(t -> city, citySignal);
+
+        System.out.println(out.valuesatT(0));
+
+        /// stop reach_{<=10} mainsquare
+        //ArrayList<Boolean> reacmainsquare = minutes.reach(new BooleanDomain(), taxi::get, mainsquare::get);
     }
 
 
