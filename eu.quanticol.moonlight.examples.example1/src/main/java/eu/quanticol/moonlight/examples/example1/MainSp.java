@@ -60,7 +60,7 @@ public class MainSp {
         Formula notIsH = new NegationFormula(isH);
 
         double range = 10;
-        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), d -> d <= range, city);
+        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), 0.0 , range, city);
         HashMap<String,Function<SpatialModel<Double>,DistanceStructure<Double,? extends Object>>> distanceFunctions = new HashMap<>();
         distanceFunctions.put("minutes", g -> minutes);
         Formula someT = new SomewhereFormula("minutes", isT);
@@ -75,7 +75,7 @@ public class MainSp {
 
 		SpatioTemporalSignal<Boolean> out = m.apply(t -> city, citySignal);
 
-        System.out.println(out.valuesatT(0));
+        System.out.println(out.getSignals().get(0));
 
         /// stop reach_{<=10} mainsquare
         //ArrayList<Boolean> reacmainsquare = minutes.reach(new BooleanDomain(), taxi::get, mainsquare::get);

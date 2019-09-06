@@ -50,7 +50,7 @@ public class mainSp2 {
 
         //// Somewere Taxi property
         double range = 10;
-        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), d -> d <= range, city);
+        DistanceStructure<Double, Double> minutes = new DistanceStructure<>(x -> x, new DoubleDistance(), 0.0, range, city);
         ArrayList<Boolean> somewhereTaxy = minutes.somewhere(new BooleanDomain(), taxi::get);
 
         //// (R1) Hospital -> Somewere Taxi property
