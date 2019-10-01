@@ -1,0 +1,30 @@
+group 'eu.quanticol.moonlight-examples'
+version '1.0-SNAPSHOT'
+description 'MoonLight: a light-weight framework for runtime monitoring'
+status 'status'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+dependencies {
+    implementation 'com.github.Quanticol:MoonLight:master-SNAPSHOT'
+    compile group: 'org.n52.matlab', name: 'matlab-control', version: '5.0.0'
+    compile fileTree(dir: 'lib', include: 'amt.jar')
+    compile fileTree(dir: 'lib', include: 'gamt.jar')
+    compile fileTree(dir: 'lib', include: 'engine.jar')
+    implementation 'com.google.code.gson:gson:2.8.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+}
