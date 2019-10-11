@@ -1,20 +1,27 @@
 package eu.quanticol.moonlight.examples.pattern;
 
-import com.mathworks.engine.EngineException;
 import com.mathworks.engine.MatlabEngine;
+import eu.quanticol.moonlight.signal.SpatialModel;
+import eu.quanticol.moonlight.util.TestUtils;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.ExecutionException;
 
 public class Pattern {
 
-    public static void main(String[] args) throws InterruptedException, EngineException {
-        MatlabEngine eng = MatlabEngine.startMatlab();
 
 
+    public static void main(String[] args) throws InterruptedException, ExecutionException, URISyntaxException {
+        URI resource = new URI(Pattern.class.getResource("TuringDataGenerator.m").getPath()).resolve(".");
+        String path = resource.getPath();
 
-
+        SpatialModel<Double> gridModel = TestUtils.createGridModel(32, 32, false, 1.0);
+        //occhio alla distance matrix
+        MatlabEngine eng = MatlabExecutor.startMatlab();
+        eng.eval("addpath(\""+ path+"\")");
+        eng.eval("TuringDataGenerator");
+        double[][][] Atraj = eng.getVariable("Atraj");
     }
 
 //    public static void main2(String[] args) {
