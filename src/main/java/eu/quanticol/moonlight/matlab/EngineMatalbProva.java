@@ -1,13 +1,9 @@
 package eu.quanticol.moonlight.matlab;
 
 
+import com.mathworks.engine.MatlabEngine;
 
-
-import com.mathworks.engine.*;
-
-import java.text.DecimalFormat;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class EngineMatalbProva {
 
