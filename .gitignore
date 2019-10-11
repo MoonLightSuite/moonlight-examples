@@ -4,5 +4,5 @@
 .classpath
 .DS_Store
 build/
-.gradle
+.gradle/
 build/
